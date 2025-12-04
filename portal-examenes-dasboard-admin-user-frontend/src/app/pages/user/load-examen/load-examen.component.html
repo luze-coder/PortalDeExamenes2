@@ -1,0 +1,74 @@
+<div class="bootstrap-wrapper">
+  <div class="container-fluid">
+    <h1>Exámenes disponibles</h1>
+
+    <div class="row mt20" *ngIf="examenes">
+
+      <div class="col-md-6" *ngFor="let e of examenes">
+        <mat-card class="mb20">
+
+          <mat-card-header>
+            <mat-card-title>{{ e.titulo }}</mat-card-title>
+            <mat-card-subtitle>{{ e.categoria?.titulo }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>{{ e.descripcion }}</p>
+            <p>Estado: {{ getNombreEstado(e.tipoHabilitacion) }}</p>
+          </mat-card-content>
+
+          <mat-card-actions>
+
+            <!-- 🔓 EXAMEN PÚBLICO -->
+            <button *ngIf="e.tipoHabilitacion === 1" mat-button color="accent"
+              [routerLink]="'/user-dashboard/instrucciones/' + e.examenId">
+              Empezar
+            </button>
+
+            <!-- 🔒 EXAMEN RESTRINGIDO -->
+            <ng-container *ngIf="e.tipoHabilitacion === 2">
+
+              <!-- 👉 Puede enviar solicitud -->
+              <button *ngIf="habilitados[e.examenId]?.puedeEnviar" mat-button color="warn"
+                (click)="solicitarAcceso(e.examenId)">
+                Enviar solicitud
+              </button>
+
+              <!-- 🟡 Solicitud pendiente -->
+              <span *ngIf="habilitados[e.examenId]?.pendiente">
+                Solicitud pendiente
+              </span>
+
+              <!-- 🟢 Habilitado -->
+              <button *ngIf="habilitados[e.examenId]?.habilitado" mat-button color="accent"
+                [routerLink]="'/user-dashboard/instrucciones/' + e.examenId">
+                Empezar (habilitado)
+              </button>
+
+              <!-- 🔴 Solicitud rechazada -->
+              <span *ngIf="habilitados[e.examenId]?.rechazada" style="color: red;">
+                Solicitud rechazada
+              </span>
+
+            </ng-container>
+
+            <button mat-button>Preguntas {{ e.numeroDePreguntas }}</button>
+            <button mat-button>Puntos Máximos {{ e.puntosMaximos }}</button>
+            <button mat-button>Puntos para aprobar {{ e.puntosAprobacion }}</button>
+
+          </mat-card-actions>
+
+        </mat-card>
+      </div>
+
+      <div class="col-md-12" *ngIf="examenes.length === 0">
+        <mat-card>
+          <mat-card-content>
+            <h1>No hay exámenes en esta materia</h1>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<!-- src/app/pages/user/sidebar/sidebar.component.html -->
+<mat-card>
+  <mat-action-list>
+    <div mat-subheader>Materias disponibles</div>
+
+    <!-- Todos los exámenes -->
+    <button mat-list-item [routerLink]="['/user-dashboard', 0]">
+      <mat-icon mat-list-icon>quiz</mat-icon>
+      Exámenes
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <!-- Mensaje mientras carga -->
+    <div *ngIf="cargando" class="p-2">Cargando materias...</div>
+
+    <!-- Lista de categorías -->
+    <button mat-list-item *ngFor="let c of categorias; trackBy: trackById"
+      [routerLink]="['/user-dashboard', c.categoriaId]">
+      <mat-icon mat-list-icon>materia</mat-icon>
+      {{ c.titulo }}
+    </button>
+
+    <div *ngIf="!cargando && categorias.length === 0" class="p-2">
+      No hay materias disponibles.
+    </div>
+  </mat-action-list>
+</mat-card>
